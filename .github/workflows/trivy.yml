@@ -73,7 +73,7 @@ jobs:
         with:
           resource-group: ${{ secrets.RESOURCE_GROUP }}
           dns-name-label: mvcmovie-dev
-          image: ${{ secrets.REGISTRY_LOGIN_SERVER }}/isv-demo/mvcmovie:isv-demo/mvcmovie:b29ca66e95a3d05165f58e20e75a34bde25c6137
+          image: ${{ secrets.REGISTRY_LOGIN_SERVER }}/isv-demo/mvcmovie:b29ca66e95a3d05165f58e20e75a34bde25c6137
           registry-login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
           registry-username: ${{ secrets.REGISTRY_USERNAME }}
           registry-password: ${{ secrets.REGISTRY_PASSWORD }}
