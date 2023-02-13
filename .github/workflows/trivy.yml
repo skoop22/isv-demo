@@ -63,10 +63,10 @@ jobs:
     name: Deploy to dev
     environment:  isv-demo-dev
     steps:
-      - name: 'Login via Azure CLI'
-        uses: azure/login@v1
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
+#       - name: 'Login via Azure CLI'
+#         uses: azure/login@v1
+#         with:
+#           creds: ${{ secrets.AZURE_CREDENTIALS }}
       
       - name: 'Deploy to Azure Container Instances'
         uses: 'azure/aci-deploy@v1.1.3'
@@ -77,11 +77,9 @@ jobs:
           registry-login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
           registry-username: ${{ secrets.REGISTRY_USERNAME }}
           registry-password: ${{ secrets.REGISTRY_PASSWORD }}
-          environment-variables: CUSTOMCONNSTR_MVCMOVIECONTEXT=secretref:CUSTOMCONNSTR_MVCMOVIECONTEXT
-          secure-environment-variables: CUSTOMCONNSTR_MVCMOVIECONTEXT=${{ secrets.CUSTOMCONNSTR_MVCMOVIECONTEXT }}]
+          environment-variables: CUSTOMCONNSTR_MVCMOVIECONTEXT=secretref:mvcmoviecontext
+          secure-environment-variables: mvcmoviecontext=${{ secrets.CUSTOMCONNSTR_MVCMOVIECONTEXT }}]
           ports: 5000
-          
-          
           name: mvcmovie-dev
           memory: 0.5
           location: ${{ vars.AZURE_LOCATION }}
