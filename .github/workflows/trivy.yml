@@ -80,7 +80,7 @@ jobs:
         with:
           containerAppName: mvcmovie-dev
           containerAppEnvironment: isv-demo-dev
-          imageToDeploy: ${{ secrets.REGISTRY_LOGIN_SERVER }}/isv-demo/mvcmovie:
+          imageToDeploy: ${{ secrets.REGISTRY_LOGIN_SERVER }}/isv-demo/mvcmovie:b29ca66e95a3d05165f58e20e75a34bde25c6137
           location: ${{ var.AZURE_LOCATION }}
           environmentVariables: CUSTOMCONNSTR_MvcMovieContext=secretref:dbconn
           resourceGroup: ${{ secrets.RESOURCE_GROUP }}
