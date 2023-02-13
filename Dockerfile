@@ -20,7 +20,7 @@ RUN dotnet restore --use-current-runtime
 
 # copy everything else and build app
 COPY src/. .
-RUN dotnet publish -c Release -o /app --use-current-runtime --self-contained false --no-restore -v d
+RUN dotnet publish -c Release -o /app --use-current-runtime --self-contained false --no-restore
 
 # final stage/image
 FROM base
