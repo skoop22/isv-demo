@@ -56,5 +56,26 @@ jobs:
           
       - name: Push Image to container registry
         run: |
-          docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/isv-demo/mvcmovie:${{ github.sha }}
-        
+          docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/isv-demo/mvcmovie:${{ github.sha }}      
+  deploy:
+    runs-on: ubuntu-latest
+    name: Deploy to dev
+    environment:  isv-demo-dev
+    steps:
+      - name: 'Login via Azure CLI'
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+      
+      - name: 'Deploy to Azure Container Instances'
+        uses: 'azure/aci-deploy@v1'
+        with:
+          resource-group: ${{ secrets.RESOURCE_GROUP }}
+          dns-name-label: mvcmovie-dev
+          image: ${{ secrets.REGISTRY_LOGIN_SERVER }}/isv-demo/mvcmovie:${{ github.sha }}
+          registry-login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
+          registry-username: ${{ secrets.REGISTRY_USERNAME }}
+          registry-password: ${{ secrets.REGISTRY_PASSWORD }}
+          secure-environment-variables: CUSTOMCONNSTR_MvcMovieContext=${{ CUSTOMCONNSTR_MVCMOVIECONTEXT }}
+          name: mvcmovie-dev
+      
