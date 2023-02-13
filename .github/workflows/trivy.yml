@@ -77,7 +77,7 @@ jobs:
           registry-login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
           registry-username: ${{ secrets.REGISTRY_USERNAME }}
           registry-password: ${{ secrets.REGISTRY_PASSWORD }}
-          secure-environment-variables: CUSTOMCONNSTR_MVCMOVIECONTEXT=${{ secrets.CUSTOMCONNSTR_MVCMOVIECONTEXT }}
+          //secure-environment-variables: CUSTOMCONNSTR_MVCMOVIECONTEXT=${{ secrets.CUSTOMCONNSTR_MVCMOVIECONTEXT }}
           
           name: mvcmovie-dev
           memory: 0.5
