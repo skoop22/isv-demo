@@ -80,7 +80,7 @@ jobs:
         with:
           containerAppName: mvcmovie-dev
           containerAppEnvironment: isv-demo-dev
-          acrName: ${{ secrets.REGISTRY_LOGIN_SERVER }}
+          acrName: dexmachisvdemo
           acrUsername: ${{ secrets.REGISTRY_USERNAME }}
           acrPassword: ${{ secrets.REGISTRY_PASSWORD }}
           imageToDeploy: ${{ secrets.REGISTRY_LOGIN_SERVER }}/isv-demo/mvcmovie:b29ca66e95a3d05165f58e20e75a34bde25c6137
