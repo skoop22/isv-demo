@@ -3,7 +3,7 @@
 # separate terms of service, privacy policy, and support
 # documentation.
 
-name: build
+name: MvcMovies build
 
 on:
   push:
@@ -11,8 +11,8 @@ on:
   pull_request:
     # The branches below must be a subset of the branches above
     branches: [ "main" ]
-  schedule:
-    - cron: '19 10 * * 3'
+#   schedule:
+#     - cron: '19 10 * * 3'
 
 permissions:
   contents: read
@@ -34,7 +34,7 @@ jobs:
           docker build -t dexmachisvdemo.azurecr.io/isv-demo/mvcmovie:${{ github.sha }} .
 
       - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@7b7aa264d83dc58691451798b4d117d53d21edfe
+        uses: aquasecurity/trivy-action@master
         with:
           image-ref: 'dexmachisvdemo.azurecr.io/isv-demo/mvcmovie:${{ github.sha }}'
           format: 'template'
