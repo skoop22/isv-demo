@@ -18,47 +18,47 @@ permissions:
   contents: read
 
 jobs:
-  build:
-    permissions:
-      contents: read # for actions/checkout to fetch code
-      security-events: write # for github/codeql-action/upload-sarif to upload SARIF results
-      actions: read # only required for a private repository by github/codeql-action/upload-sarif to get the Action run status
-    name: Build
-    runs-on: "ubuntu-latest"
-    steps:
-      - uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: |
-            7.0.x
+#   build:
+#     permissions:
+#       contents: read # for actions/checkout to fetch code
+#       security-events: write # for github/codeql-action/upload-sarif to upload SARIF results
+#       actions: read # only required for a private repository by github/codeql-action/upload-sarif to get the Action run status
+#     name: Build
+#     runs-on: "ubuntu-latest"
+#     steps:
+#       - uses: actions/setup-dotnet@v3
+#         with:
+#           dotnet-version: |
+#             7.0.x
             
-      - name: Checkout code
-        uses: actions/checkout@v3
+#       - name: Checkout code
+#         uses: actions/checkout@v3
 
-      - name: Build an image from Dockerfile
-        run: |
-          docker build -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/isv-demo/mvcmovie:${{ github.sha }} .
+#       - name: Build an image from Dockerfile
+#         run: |
+#           docker build -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/isv-demo/mvcmovie:${{ github.sha }} .
           
-      - name: Run Microsoft Security DevOps
-        uses: microsoft/security-devops-action@preview
-        id: msdo
+#       - name: Run Microsoft Security DevOps
+#         uses: microsoft/security-devops-action@preview
+#         id: msdo
         
-      - name: Upload results to Security tab
-        uses: github/codeql-action/upload-sarif@v2
-        with:
-          sarif_file: ${{ steps.msdo.outputs.sarifFile }}
+#       - name: Upload results to Security tab
+#         uses: github/codeql-action/upload-sarif@v2
+#         with:
+#           sarif_file: ${{ steps.msdo.outputs.sarifFile }}
     
-      - name: Azure Container registry Login
-        uses: Azure/docker-login@v1.0.1
-        with:
-          login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
-          username: ${{ secrets.REGISTRY_USERNAME }}
-          password: ${{ secrets.REGISTRY_PASSWORD }}
+#       - name: Azure Container registry Login
+#         uses: Azure/docker-login@v1.0.1
+#         with:
+#           login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
+#           username: ${{ secrets.REGISTRY_USERNAME }}
+#           password: ${{ secrets.REGISTRY_PASSWORD }}
           
-      - name: Push Image to container registry
-        run: |
-          docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/isv-demo/mvcmovie:${{ github.sha }}
+#       - name: Push Image to container registry
+#         run: |
+#           docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/isv-demo/mvcmovie:${{ github.sha }}
   deploy:
-    needs: [build]
+#     needs: [build]
     runs-on: ubuntu-latest
     name: Deploy to dev
     environment:  isv-demo-dev
@@ -69,15 +69,17 @@ jobs:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
       
       - name: 'Deploy to Azure Container Instances'
-        uses: 'azure/aci-deploy@v1'
+        uses: 'azure/aci-deploy@v1.1.3'
         with:
           resource-group: ${{ secrets.RESOURCE_GROUP }}
           dns-name-label: mvcmovie-dev
-          image: ${{ secrets.REGISTRY_LOGIN_SERVER }}/isv-demo/mvcmovie:${{ github.sha }}
+          image: ${{ secrets.REGISTRY_LOGIN_SERVER }}/isv-demo/mvcmovie:isv-demo/b29ca66e95a3d05165f58e20e75a34bde25c6137
           registry-login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
           registry-username: ${{ secrets.REGISTRY_USERNAME }}
           registry-password: ${{ secrets.REGISTRY_PASSWORD }}
           secure-environment-variables: CUSTOMCONNSTR_MVCMOVIECONTEXT=${{ secrets.CUSTOMCONNSTR_MVCMOVIECONTEXT }}
+          
           name: mvcmovie-dev
+          memory: 0.5
           location: ${{ vars.AZURE_LOCATION }}
       
