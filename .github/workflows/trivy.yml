@@ -3,7 +3,7 @@
 # separate terms of service, privacy policy, and support
 # documentation.
 
-name: build
+name: MvcMovies build
 
 on:
   push:
@@ -11,8 +11,8 @@ on:
   pull_request:
     # The branches below must be a subset of the branches above
     branches: [ "main" ]
-  schedule:
-    - cron: '19 10 * * 3'
+#   schedule:
+#     - cron: '19 10 * * 3'
 
 permissions:
   contents: read
@@ -26,24 +26,23 @@ jobs:
     name: Build
     runs-on: "ubuntu-latest"
     steps:
+      - uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: |
+            7.0.x
+            
       - name: Checkout code
         uses: actions/checkout@v3
 
       - name: Build an image from Dockerfile
         run: |
           docker build -t dexmachisvdemo.azurecr.io/isv-demo/mvcmovie:${{ github.sha }} .
-
-      - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@7b7aa264d83dc58691451798b4d117d53d21edfe
-        with:
-          image-ref: 'dexmachisvdemo.azurecr.io/isv-demo/mvcmovie:${{ github.sha }}'
-          format: 'template'
-          template: '@/contrib/sarif.tpl'
-          output: 'trivy-results.sarif'
-          ignore-unfixed: true
-          severity: 'CRITICAL,HIGH'
-
-      - name: Upload Trivy scan results to GitHub Security tab
+      - name: Run Microsoft Security DevOps
+        uses: microsoft/security-devops-action@preview
+        id: msdo
+        
+      - name: Upload results to Security tab
         uses: github/codeql-action/upload-sarif@v2
         with:
-          sarif_file: 'trivy-results.sarif'
+          sarif_file: ${{ steps.msdo.outputs.sarifFile }}
+        
