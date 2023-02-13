@@ -36,7 +36,8 @@ jobs:
 
       - name: Build an image from Dockerfile
         run: |
-          docker build -t dexmachisvdemo.azurecr.io/isv-demo/mvcmovie:${{ github.sha }} .
+          docker build -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/isv-demo/mvcmovie:${{ github.sha }} .
+          
       - name: Run Microsoft Security DevOps
         uses: microsoft/security-devops-action@preview
         id: msdo
@@ -45,4 +46,15 @@ jobs:
         uses: github/codeql-action/upload-sarif@v2
         with:
           sarif_file: ${{ steps.msdo.outputs.sarifFile }}
+    
+      - name: Azure Container registry Login
+        uses: Azure/docker-login@v1.0.1
+        with:
+          login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
+          username: ${{ secrets.REGISTRY_USERNAME }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
+          
+      - name: Push Image to container registry
+        run: |
+          docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/isv-demo/mvcmovie:${{ github.sha }}
         
