@@ -73,12 +73,14 @@ jobs:
         with:
           resource-group: ${{ secrets.RESOURCE_GROUP }}
           dns-name-label: mvcmovie-dev
-          image: isv-demo/mvcmovie:isv-demo/mvcmovie:b29ca66e95a3d05165f58e20e75a34bde25c6137
+          image: ${{ secrets.REGISTRY_LOGIN_SERVER }}/isv-demo/mvcmovie:isv-demo/mvcmovie:b29ca66e95a3d05165f58e20e75a34bde25c6137
           registry-login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
           registry-username: ${{ secrets.REGISTRY_USERNAME }}
           registry-password: ${{ secrets.REGISTRY_PASSWORD }}
           environment-variables: CUSTOMCONNSTR_MVCMOVIECONTEXT=secretref:CUSTOMCONNSTR_MVCMOVIECONTEXT
-          secure-environment-variables: CUSTOMCONNSTR_MVCMOVIECONTEXT=${{ secrets.CUSTOMCONNSTR_MVCMOVIECONTEXT }}
+          secure-environment-variables: CUSTOMCONNSTR_MVCMOVIECONTEXT=${{ secrets.CUSTOMCONNSTR_MVCMOVIECONTEXT }}]
+          ports: 5000
+          
           
           name: mvcmovie-dev
           memory: 0.5
