@@ -57,7 +57,7 @@ jobs:
 #       - name: Push Image to container registry
 #         run: |
 #           docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/isv-demo/mvcmovie:${{ github.sha }}
-  deploy:
+  deploydev:
 #     needs: [build]
     runs-on: ubuntu-latest
     name: Deploy to dev
@@ -68,18 +68,37 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Azure Container registry Login
-        uses: Azure/docker-login@v1.0.1
-        with:
-          login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
-          username: ${{ secrets.REGISTRY_USERNAME }}
-          password: ${{ secrets.REGISTRY_PASSWORD }}
-      
-      - name: Azure Container Apps Build and Deploy
+      - name: Azure Container Apps Deploy
         uses: Azure/container-apps-deploy-action@v0
         with:
           containerAppName: mvcmovie-dev
           containerAppEnvironment: isv-demo-dev
+          acrName: dexmachisvdemo
+          acrUsername: ${{ secrets.REGISTRY_USERNAME }}
+          acrPassword: ${{ secrets.REGISTRY_PASSWORD }}
+          imageToDeploy: ${{ secrets.REGISTRY_LOGIN_SERVER }}/isv-demo/mvcmovie:b29ca66e95a3d05165f58e20e75a34bde25c6137
+          location: ${{ vars.AZURE_LOCATION }}
+#          environmentVariables: CUSTOMCONNSTR_MvcMovieContext=secretref:dbconn
+          resourceGroup: ${{ secrets.RESOURCE_GROUP }}
+#          targetPort: 5000
+
+  deploystg:
+    needs: [deploydev]
+    runs-on: ubuntu-latest
+    name: Deploy to stg
+    environment:  isv-demo-stg
+    steps:
+      - name: 'Login via Azure CLI'
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      
+      - name: Azure Container apps Deploy
+        uses: Azure/container-apps-deploy-action@v0
+        with:
+          containerAppName: mvcmovie-stg
+          containerAppEnvironment: isv-demo-stg
           acrName: dexmachisvdemo
           acrUsername: ${{ secrets.REGISTRY_USERNAME }}
           acrPassword: ${{ secrets.REGISTRY_PASSWORD }}
