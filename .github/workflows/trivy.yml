@@ -63,10 +63,10 @@ jobs:
     name: Deploy to dev
     environment:  isv-demo-dev
     steps:
-#       - name: 'Login via Azure CLI'
-#         uses: azure/login@v1
-#         with:
-#           creds: ${{ secrets.AZURE_CREDENTIALS }}
+      - name: 'Login via Azure CLI'
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
       
       - name: 'Deploy to Azure Container Instances'
         uses: 'azure/aci-deploy@v1.1.3'
