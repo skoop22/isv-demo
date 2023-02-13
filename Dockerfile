@@ -10,7 +10,7 @@ RUN adduser -u 5678 --disabled-password --gecos "" appuser && chown -R appuser /
 USER appuser
 
 
-# 
+# Build Applicataions
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /source
 
@@ -21,6 +21,7 @@ RUN dotnet restore --use-current-runtime
 # copy everything else and build app
 COPY src/. .
 RUN dotnet publish -c Release -o /app --use-current-runtime --self-contained false --no-restore
+
 
 # final stage/image
 FROM base
