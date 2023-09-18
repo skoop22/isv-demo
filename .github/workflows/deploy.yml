@@ -2,11 +2,13 @@
 name: MvcMovies build
 
 on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    # The branches below must be a subset of the branches above
-    branches: [ "main" ]
+  workflow_dispatch:
+    inputs:
+      Deploy:
+        description: 'Deploy Bool'
+        required: true
+        default: true
+        type: boolean
 
 permissions:
   contents: read
